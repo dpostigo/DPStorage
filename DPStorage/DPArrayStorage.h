@@ -10,9 +10,13 @@
 
 static char DPArrayStorageContext;
 
-@interface DPArrayStorage : DPStorage
+@interface DPArrayStorage : DPStorage {
 
-@property(nonatomic, retain) NSMutableArray *exampleItems;
+    NSMutableDictionary *arrayControllers;
+}
+
+@property(nonatomic, strong) NSMutableArray *exampleItems;
+@property(nonatomic, strong) NSMutableDictionary *arrayControllers;
 
 - (NSMutableArray *) arrayForKey: (NSString *) key;
 - (void) setArray: (NSMutableArray *) array ForKey: (NSString *) key;

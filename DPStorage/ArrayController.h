@@ -6,8 +6,7 @@
 
 @interface ArrayController : NSObject
 
-
-@property(nonatomic, retain) NSMutableArray *items;
+@property(nonatomic, strong) NSMutableArray *items;
 
 
 @end

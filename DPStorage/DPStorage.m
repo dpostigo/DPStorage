@@ -40,8 +40,6 @@
 
 #pragma mark Autocreate
 
-
-
 + (instancetype) autocreateWithName: (NSString *) aStorageName {
     return [[self class] autocreateWithName: aStorageName location: [[self class] storageLocation]];
 }
@@ -92,11 +90,11 @@
     NSString *location = self.storagePath;
     NSLog(@"Writing to location: %@", location);
     [self writeToFile: location atomically: YES];
+
 }
 
 - (instancetype) destore {
     id instance = [[self class] objectWithContentsOfFile: self.storagePath];
-    NSLog(@"Deallocated instance = %@", instance);
     return instance;
 }
 

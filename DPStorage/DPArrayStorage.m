@@ -7,10 +7,7 @@
 #import "NSObject+CallSelector.h"
 
 @interface DPArrayStorage () {
-    NSMutableDictionary *arrayControllers;
 }
-
-@property(nonatomic, strong) NSMutableDictionary *arrayControllers;
 
 - (NSString *) keyForArrayController: (ArrayController *) arrayController;
 
@@ -23,6 +20,8 @@
 
 #pragma mark Example array
 
+
+@synthesize arrayControllers;
 
 - (NSMutableArray *) exampleItems {
     return [self arrayForKey: @"exampleItems"];
@@ -109,7 +108,7 @@
 }
 
 - (NSMutableArray *) arrayForKey: (NSString *) key {
-    return [self arrayControllerForKey: key].items;
+    return [[self arrayControllerForKey: key] items];
 }
 
 
@@ -122,7 +121,10 @@
     if (ret == nil) {
         ret = [[ArrayController alloc] init];
         [ret addObserver: self forKeyPath: @"items" options: (NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionNew) context: &DPArrayStorageContext];
-        [arrayControllers setObject: ret forKey: key];
+        [self.arrayControllers setObject: ret forKey: key];
+    } else {
+        //        NSLog(@"Using stored controller.");
+
     }
     return ret;
 }
@@ -134,27 +136,24 @@
     return arrayControllers;
 }
 
-- (void) setArrayControllers: (NSMutableDictionary *) arrayControllers1 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    arrayControllers = arrayControllers1;
-
-}
-
 
 - (void) dealloc {
-    for (ArrayController *controller in arrayControllers) {
-        [controller removeObserver: self forKeyPath: @"items"];
-    }
+    //    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //
+    //    NSArray *keys = [self.arrayControllers allKeys];
+    //    for (NSString *key in keys) {
+    //        ArrayController *controller = [self.arrayControllers objectForKey: key];
+    //        //            [controller removeObserver: self forKeyPath: @"items"];
+    //    }
 
 }
 
-
-- (void) observer: (ArrayController *) arrayController {
-
-    [arrayController addObserver: self forKeyPath: @"items" options: (NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionNew) context: &DPArrayStorageContext];
-
-}
-
+//
+//- (void) observer: (ArrayController *) arrayController {
+//
+//    [arrayController addObserver: self forKeyPath: @"items" options: (NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionNew) context: &DPArrayStorageContext];
+//
+//}
 
 
 @end
