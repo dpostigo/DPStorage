@@ -60,8 +60,7 @@
                 value = [change objectForKey: NSKeyValueChangeOldKey];
             }
 
-            //            NSLog(@"selector = %@", NSStringFromSelector(selector));
-            [self forwardSelector: selector delegate: self object: value];
+            [self notifyDelegates: selector object: value];
         }
 
     } else {
