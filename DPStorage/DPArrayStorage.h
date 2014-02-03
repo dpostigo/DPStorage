@@ -11,7 +11,6 @@
 static char DPArrayStorageContext;
 
 @interface DPArrayStorage : DPStorage {
-
     NSMutableDictionary *arrayControllers;
 }
 
@@ -21,4 +20,5 @@ static char DPArrayStorageContext;
 - (NSMutableArray *) arrayForKey: (NSString *) key;
 - (void) setArray: (NSMutableArray *) array ForKey: (NSString *) key;
 - (ArrayController *) arrayControllerForKey: (NSString *) key;
+- (void) addControllerObserver: (ArrayController *) controller;
 @end

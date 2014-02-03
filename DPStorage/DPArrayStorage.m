@@ -2,9 +2,9 @@
 // Created by Dani Postigo on 1/25/14.
 //
 
+#import <AutoCoding/AutoCoding.h>
 #import "ArrayController.h"
 #import "DPArrayStorage.h"
-#import "NSObject+CallSelector.h"
 
 @interface DPArrayStorage () {
 }
@@ -33,10 +33,7 @@
 
 
 
-
-
 #pragma mark Setters
-
 
 
 
@@ -44,12 +41,10 @@
 
 - (void) observeValueForKeyPath: (NSString *) keyPath ofObject: (id) object change: (NSDictionary *) change context: (void *) context {
     if (context == &DPArrayStorageContext) {
-
         if ([object isKindOfClass: [ArrayController class]]) {
-
+            id newValue = [change objectForKey: NSKeyValueChangeNewKey];
             NSString *key = [self keyForArrayController: (ArrayController *) object];
 
-            id value = [change objectForKey: NSKeyValueChangeNewKey];
             BOOL isPriorNotification = [[change objectForKey: NSKeyValueChangeNotificationIsPriorKey] boolValue];
             NSKeyValueObservingOptions kind = (NSKeyValueObservingOptions) [[change objectForKey: NSKeyValueChangeKindKey] intValue];
 
@@ -57,10 +52,19 @@
             SEL selector = [self selectorWithKey: key changeKind: kind isPrior: isPriorNotification];
 
             if (isPriorNotification) {
-                value = [change objectForKey: NSKeyValueChangeOldKey];
+                newValue = [change objectForKey: NSKeyValueChangeOldKey];
             }
 
-            [self notifyDelegates: selector object: value];
+            if (kind == NSKeyValueChangeSetting || kind == NSKeyValueChangeReplacement) {
+                id oldValue = [change objectForKey: NSKeyValueChangeOldKey];
+                [self notifyDelegates: selector object: oldValue object: newValue];
+
+                //                NSLog(@"%s, selector = %@, oldValue = %@, newValue = %@", __PRETTY_FUNCTION__, NSStringFromSelector(selector), oldValue, newValue);
+            } else {
+
+                [self notifyDelegates: selector object: newValue];
+            }
+
         }
 
     } else {
@@ -71,10 +75,9 @@
 
 - (SEL) selectorWithKey: (NSString *) key changeKind: (NSKeyValueObservingOptions) kind isPrior: (BOOL) isPriorNotification {
     NSMutableString *sel = [[NSMutableString alloc] initWithString: key];
-
     [sel appendString: isPriorNotification ? @"Will" : @"Did"];
     if (kind == NSKeyValueChangeSetting) {
-        [sel appendString: @"Reset:"];
+        [sel appendString: @"Reset:with:"];
 
     } else if (kind == NSKeyValueChangeInsertion) {
         [sel appendString: @"Add:"];
@@ -83,7 +86,7 @@
         [sel appendString: @"Remove:"];
     }
     else if (kind == NSKeyValueChangeReplacement) {
-        [sel appendString: @"Replace:"];
+        [sel appendString: @"Replace:with:"];
 
     } else {
         [sel appendString: @"Update"];
@@ -119,13 +122,17 @@
     ArrayController *ret = [self.arrayControllers objectForKey: key];
     if (ret == nil) {
         ret = [[ArrayController alloc] init];
-        [ret addObserver: self forKeyPath: @"items" options: (NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionNew) context: &DPArrayStorageContext];
+        [self addControllerObserver: ret];
         [self.arrayControllers setObject: ret forKey: key];
-    } else {
-        //        NSLog(@"Using stored controller.");
-
     }
+
     return ret;
+}
+
+- (void) addControllerObserver: (ArrayController *) controller {
+    if (![controller hasObserver: self]) {
+        [controller addObserver: self forKeyPath: @"items" options: (NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionNew) context: &DPArrayStorageContext];
+    }
 }
 
 - (NSMutableDictionary *) arrayControllers {
@@ -136,23 +143,28 @@
 }
 
 
+
+#pragma mark Dearchiving
+
+- (void) setWithCoder: (NSCoder *) aDecoder {
+    [super setWithCoder: aDecoder];
+
+    [self subscribeDelegate: self];
+}
+
 - (void) dealloc {
-    //    NSLog(@"%s", __PRETTY_FUNCTION__);
-    //
-    //    NSArray *keys = [self.arrayControllers allKeys];
-    //    for (NSString *key in keys) {
-    //        ArrayController *controller = [self.arrayControllers objectForKey: key];
-    //        //            [controller removeObserver: self forKeyPath: @"items"];
-    //    }
 
 }
 
-//
-//- (void) observer: (ArrayController *) arrayController {
-//
-//    [arrayController addObserver: self forKeyPath: @"items" options: (NSKeyValueObservingOptionOld | NSKeyValueObservingOptionPrior | NSKeyValueObservingOptionNew) context: &DPArrayStorageContext];
-//
-//}
+
+- (id) init {
+    self = [super init];
+    if (self) {
+        [self subscribeDelegate: self];
+    }
+
+    return self;
+}
 
 
 @end

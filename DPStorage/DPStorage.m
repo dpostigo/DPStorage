@@ -19,7 +19,13 @@
 #define DPLog NSLog
 #endif
 
-
++ (NSDictionary *) codableProperties {
+    NSMutableDictionary *ret = [[NSMutableDictionary alloc] initWithDictionary: [super codableProperties]];
+    if ([ret objectForKey: @"delegates"]) {
+        [ret removeObjectForKey: @"delegates"];
+    }
+    return ret;
+}
 
 
 #pragma mark Destore
@@ -88,7 +94,7 @@
 
 - (void) save {
     NSString *location = self.storagePath;
-    NSLog(@"Writing to location: %@", location);
+    //    NSLog(@"Writing to location: %@", location);
     [self writeToFile: location atomically: YES];
 
 }

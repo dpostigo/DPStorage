@@ -3,10 +3,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BasicDelegater.h"
 
-@interface ArrayController : NSObject
+@interface ArrayController : BasicDelegater
 
 @property(nonatomic, strong) NSMutableArray *items;
 
 
+- (BOOL) hasObserver: (NSObject *) observer;
 @end

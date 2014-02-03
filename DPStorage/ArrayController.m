@@ -2,6 +2,7 @@
 // Created by Dani Postigo on 1/25/14.
 //
 
+#import <AutoCoding/AutoCoding.h>
 #import "ArrayController.h"
 #import "NSObject+AutoDescription.h"
 
@@ -20,6 +21,15 @@
 @synthesize dataArray;
 @synthesize observers;
 
++ (NSDictionary *) codableProperties {
+    NSMutableDictionary *ret = [[NSMutableDictionary alloc] initWithDictionary: [super codableProperties]];
+    if ([ret objectForKey: @"observers"]) {
+        [ret removeObjectForKey: @"observers"];
+    }
+    return ret;
+}
+
+
 - (NSString *) description {
     return [self autoDescription];
 }
@@ -37,7 +47,11 @@
     if ([keyPath isEqualToString: @"items"]) {
         keyPath = @"dataArray";
         [self.observers addObject: observer];
+    } else {
+        NSLog(@"%s, keyPath = %@", __PRETTY_FUNCTION__, keyPath);
+
     }
+
     [super addObserver: observer forKeyPath: keyPath options: options context: context];
 }
 
@@ -59,11 +73,15 @@
 }
 
 
+- (BOOL) hasObserver: (NSObject *) observer {
+    return [self.observers containsObject: observer];
+}
+
+
 - (void) removeObserver: (NSObject *) observer {
     if ([self.observers containsObject: observer]) {
         [self.observers removeObject: observer];
     }
-
 }
 
 - (void) setItems: (NSMutableArray *) items {
@@ -75,39 +93,45 @@
     return [self mutableArrayValueForKey: @"dataArray"];
 }
 
-//
-//- (NSUInteger) countOfItems {
-//    return [self.dataArray count];
-//}
-//
-////
-////- (id) objectInItemsAtIndex: (NSUInteger) index {
-////    return [self.items objectAtIndex: index];
-////}
-//
-//- (NSArray *) itemsAtIndexes: (NSIndexSet *) indexes {
-//    return [self.dataArray objectsAtIndexes: indexes];
-//}
-//
-//- (void) getItems: (id __unsafe_unretained *) buffer range: (NSRange) inRange {
-//    [self.dataArray getObjects: buffer range: inRange];
-//}
-//
-//
-//- (void) insertItems: (NSArray *) employeeArray atIndexes: (NSIndexSet *) indexes {
-//    [self.dataArray insertObjects: employeeArray atIndexes: indexes];
-//    return;
-//}
-//
-//- (void) removeItemsAtIndexes: (NSIndexSet *) indexes {
-//    [self.dataArray removeObjectsAtIndexes: indexes];
-//}
-//
-//- (void) replaceItemsAtIndexes: (NSIndexSet *) indexes withItems: (NSArray *) employeeArray {
-//    [self.dataArray replaceObjectsAtIndexes: indexes withObjects: employeeArray];
-//}
+
+/*
+#pragma mark KVC Compliance
 
 
+- (NSUInteger) countOfItems {
+    return [self.dataArray count];
+}
+//
+//- (id) objectInItemsAtIndex: (NSUInteger) index {
+//    return [self.items objectAtIndex: index];
+//}
+
+- (NSArray *) itemsAtIndexes: (NSIndexSet *) indexes {
+    return [self.dataArray objectsAtIndexes: indexes];
+}
+
+- (void) getItems: (id __unsafe_unretained *) buffer range: (NSRange) inRange {
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    [self.dataArray getObjects: buffer range: inRange];
+}
+
+
+- (void) insertItems: (NSArray *) employeeArray atIndexes: (NSIndexSet *) indexes {
+    [self.dataArray insertObjects: employeeArray atIndexes: indexes];
+    return;
+}
+
+- (void) removeItemsAtIndexes: (NSIndexSet *) indexes {
+    [self.dataArray removeObjectsAtIndexes: indexes];
+}
+
+- (void) replaceItemsAtIndexes: (NSIndexSet *) indexes withItems: (NSArray *) employeeArray {
+    [self.dataArray replaceObjectsAtIndexes: indexes withObjects: employeeArray];
+}
+
+*/
+
+#pragma mark Getters
 
 - (NSMutableArray *) observers {
     if (observers == nil) {
@@ -118,11 +142,11 @@
 
 
 - (void) dealloc {
-   [self removeAllObservers];
+    [self removeAllObservers];
 }
 
 - (void) removeAllObservers {
-      while ([self.observers count] > 0) {
+    while ([self.observers count] > 0) {
         NSObject *observer = [self.observers objectAtIndex: 0];
         [self removeObserver: observer forKeyPath: @"items"];
         [self.observers removeObject: observer];
