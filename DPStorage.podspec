@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "DPStorage"
-  s.version      = "0.0.5"
+  s.version      = "0.0.6"
   s.summary      = "Storage classes"
   s.homepage     = "http://dpostigo.com"
   s.license      = 'BSD'

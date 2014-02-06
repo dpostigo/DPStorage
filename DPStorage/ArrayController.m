@@ -23,8 +23,8 @@
 
 + (NSDictionary *) codableProperties {
     NSMutableDictionary *ret = [[NSMutableDictionary alloc] initWithDictionary: [super codableProperties]];
-    if ([ret objectForKey: @"observers"]) {
-        [ret removeObjectForKey: @"observers"];
+    if ([ret objectForKey: @"items"]) {
+        [ret removeObjectForKey: @"items"];
     }
     return ret;
 }

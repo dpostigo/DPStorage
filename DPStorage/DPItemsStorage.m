@@ -10,6 +10,8 @@
 @synthesize itemControllers;
 @synthesize controllerClasses;
 
+@synthesize removesReplacedItems;
+
 - (NSMutableArray *) arrayForKey: (NSString *) key {
     return [[self itemControllerForKey: key] items];
 }
@@ -25,7 +27,6 @@
     if (ret == nil) {
         ret = [self createControllerForKey: key];
     }
-
     return ret;
 }
 
@@ -48,6 +49,7 @@
 - (void) setupController: (DPItemsController *) controller forKey: (NSString *) key {
     [controller subscribeDelegate: self];
     controller.arrayName = key;
+    controller.removesReplacedItems = self.removesReplacedItems;
     [self.itemControllers setObject: controller forKey: key];
 }
 
@@ -83,5 +85,6 @@
     }
     return itemControllers;
 }
+
 
 @end

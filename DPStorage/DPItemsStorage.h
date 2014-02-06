@@ -10,9 +10,11 @@
 @interface DPItemsStorage : DPStorage {
     NSMutableDictionary *itemControllers;
     NSMutableDictionary *controllerClasses;
+    BOOL removesReplacedItems;
 
 }
 
+@property(nonatomic) BOOL removesReplacedItems;
 @property(nonatomic, strong) NSMutableDictionary *itemControllers;
 @property(nonatomic, strong) NSMutableDictionary *controllerClasses;
 

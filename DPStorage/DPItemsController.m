@@ -6,6 +6,7 @@
 #import "DPItemsController.h"
 #import "NSObject+DPKitObservation.h"
 #import "AutoCoding.h"
+#import "NSObject+DPObjectUtils.h"
 
 @implementation DPItemsController
 
@@ -13,6 +14,8 @@ static char ItemsControllerObservationContext;
 
 @synthesize arrayName;
 @synthesize itemClass;
+
+@synthesize removesReplacedItems;
 
 - (id) init {
     self = [super init];
@@ -62,7 +65,7 @@ static char ItemsControllerObservationContext;
         NSKeyValueChange kind = (NSKeyValueChange) [[change objectForKey: NSKeyValueChangeKindKey] intValue];
 
         BOOL isPriorNotification = [[change objectForKey: NSKeyValueChangeNotificationIsPriorKey] boolValue];
-        SEL selector = [self selectorWithKey: self.pluralizedString changeKind: kind isPrior: isPriorNotification];
+        SEL selector = [NSObject selectorWithKey: self.pluralizedString changeKind: kind isPrior: isPriorNotification];
 
 
         NSIndexSet *indexSet = [change objectForKey: NSKeyValueChangeIndexesKey];
@@ -90,47 +93,27 @@ static char ItemsControllerObservationContext;
             newValue = nil;
         }
         NSString *changeKind = [self stringForKeyValueChange: kind];
-
         //        NSLog(@"changeKind = %@, selector = %@, oldValue = %@, newValue = %@", changeKind, NSStringFromSelector(selector), oldValue, newValue);
 
-        if (kind == NSKeyValueChangeSetting || kind == NSKeyValueChangeReplacement) {
+
+        if (kind == NSKeyValueChangeReplacement) {
+            if (removesReplacedItems) {
+                id replacementObject = isPriorNotification ? oldValue : newValue;
+                [self notifyDelegates: NSSelectorFromString([NSString stringWithFormat: isPriorNotification ? @"%@WillRemove:" : @"DidAdd:", self.pluralizedString]) object: replacementObject];
+            }
             [self notifyDelegates: selector object: oldValue object: newValue];
 
-        } else if (kind == NSKeyValueChangeSetting) {
+        }
+        else if (kind == NSKeyValueChangeSetting) {
+            [self notifyDelegates: selector object: oldValue object: newValue];
 
         } else {
             [self notifyDelegates: selector object: messageValue];
 
         }
-
     } else {
         [super observeValueForKeyPath: keyPath ofObject: object change: change context: context];
     }
-}
-
-
-- (SEL) selectorWithKey: (NSString *) key changeKind: (NSKeyValueChange) kind isPrior: (BOOL) isPriorNotification {
-    NSMutableString *sel = [[NSMutableString alloc] initWithString: key];
-    [sel appendString: isPriorNotification ? @"Will" : @"Did"];
-
-    if (kind == NSKeyValueChangeSetting) {
-        [sel appendString: isPriorNotification ? @"Reset:" : @"Reset:with:"];
-
-    } else if (kind == NSKeyValueChangeInsertion) {
-        [sel appendString: isPriorNotification ? @"Add" : @"Add:"];
-
-    } else if (kind == NSKeyValueChangeRemoval) {
-        [sel appendString: @"Remove:"];
-    }
-    else if (kind == NSKeyValueChangeReplacement) {
-        [sel appendString: isPriorNotification ? @"Replace:" : @"Replace:with:"];
-
-    } else {
-        [sel appendString: @"Update"];
-    }
-
-    SEL selector = NSSelectorFromString(sel);
-    return selector;
 }
 
 
