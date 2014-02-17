@@ -104,10 +104,10 @@
     return instance;
 }
 
-
-- (NSString *) description {
-    return [self autoDescription];
-}
+//
+//- (NSString *) description {
+//    return [self autoDescription];
+//}
 
 
 

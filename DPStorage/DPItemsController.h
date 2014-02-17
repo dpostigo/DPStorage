@@ -10,11 +10,16 @@
     NSString *arrayName;
     __strong Class itemClass;
 
+    BOOL notifiesStorageParent;
     BOOL removesReplacedItems;
+
+    id storageParent;
 }
 
 @property(nonatomic, strong) Class itemClass;
 @property(nonatomic, copy) NSString *arrayName;
 @property(nonatomic) BOOL removesReplacedItems;
+@property(nonatomic, strong) id storageParent;
+@property(nonatomic) BOOL notifiesStorageParent;
 - (void) setup;
 @end
