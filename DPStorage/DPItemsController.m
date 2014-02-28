@@ -100,7 +100,6 @@ static char DPItemsControllerObservationContext;
                 id replacementObject = isPriorNotification ? oldValue : newValue;
                 [self notifyDelegates: NSSelectorFromString([NSString stringWithFormat: isPriorNotification ? @"%@WillRemove:" : @"%@DidAdd:", self.pluralizedString]) object: replacementObject];
             }
-
             [self notifyDelegates: selector object: oldValue object: newValue];
 
         } else if (kind == NSKeyValueChangeSetting) {
@@ -110,7 +109,6 @@ static char DPItemsControllerObservationContext;
             [self notifyDelegates: selector object: messageValue];
 
         }
-
     }
 
     else {
@@ -235,15 +233,15 @@ static char DPItemsControllerObservationContext;
 
 
 - (void) _itemsWillUpdate {
-//    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //    NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 - (void) _itemsWillAdd {
-//    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //    NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 - (void) _itemsWillRemove: (id) item {
-//    NSLog(@"%s", __PRETTY_FUNCTION__);
+    //    NSLog(@"%s", __PRETTY_FUNCTION__);
 
 }
 

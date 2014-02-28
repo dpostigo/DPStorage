@@ -110,7 +110,7 @@
     return [self.dataArray objectsAtIndexes: indexes];
 }
 
-- (void) getItems: (id __unsafe_unretained *) buffer range: (NSRange) inRange {
+- (void) getItems: (id __unsafe_unretained *) buffer tickingRange: (NSRange) inRange {
     NSLog(@"%s", __PRETTY_FUNCTION__);
     [self.dataArray getObjects: buffer range: inRange];
 }
