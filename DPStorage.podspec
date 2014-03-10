@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
 
   s.ios.deployment_target = '5.0'
-  s.osx.deployment_target = '10.7'
+  s.osx.deployment_target = '10.8'
 
   s.source_files = 'DPStorage/**/*.{h,m}'
   
