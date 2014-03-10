@@ -16,7 +16,7 @@
     for (NSString *type in arrayNames) {
         NSArray *array = [self valueForKeyPath: type];
         for (id object in array) {
-            SEL selector = NSSelectorFromString([NSString stringWithFormat: @"%@DidAdd:", type]);
+            // SEL selector = NSSelectorFromString([NSString stringWithFormat: @"%@DidAdd:", type]);
             //            [self forwardSelector: selector delegate: self object: object];
         }
     }

@@ -8,7 +8,6 @@
 @class ArrayController;
 
 
-static char DPArrayStorageContext;
 
 @interface DPArrayStorage : DPStorage {
     NSMutableDictionary *arrayControllers;

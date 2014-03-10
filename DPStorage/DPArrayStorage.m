@@ -6,6 +6,9 @@
 #import "ArrayController.h"
 #import "DPArrayStorage.h"
 
+
+static char DPArrayStorageContext;
+
 @interface DPArrayStorage () {
 }
 

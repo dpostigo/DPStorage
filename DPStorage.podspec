@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "DPStorage"
-  s.version      = "0.0.8"
+  s.version      = "0.0.9"
   s.summary      = "Storage classes"
   s.homepage     = "http://dpostigo.com"
   s.license      = 'BSD'
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 
 
   s.ios.deployment_target = '5.0'
-  s.osx.deployment_target = '10.8'
+  s.osx.deployment_target = '10.7'
 
   s.source_files = 'DPStorage/**/*.{h,m}'
   
@@ -18,7 +18,6 @@ Pod::Spec.new do |s|
 
   s.dependency   'AutoCoding'
   s.dependency   'NSObject+AutoDescription'
-  s.dependency   'DPKit'
   s.dependency   'DPObject'
 
 

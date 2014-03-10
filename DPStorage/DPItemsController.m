@@ -94,7 +94,7 @@ static char DPItemsControllerObservationContext;
                 break;
         }
 
-        NSString *changeKind = [self stringForKeyValueChange: kind];
+        // NSString *changeKind = [self stringForKeyValueChange: kind];
         if (kind == NSKeyValueChangeReplacement) {
             if (removesReplacedItems) {
                 id replacementObject = isPriorNotification ? oldValue : newValue;
@@ -127,7 +127,7 @@ static char DPItemsControllerObservationContext;
 
     NSInvocation *noArgumentsInvocation = [NSInvocation invocationWithMethodSignature: [self methodSignatureForSelector: @selector(_itemsWillReset:)]];
     NSInvocation *singleArgumentInvocation = [NSInvocation invocationWithMethodSignature: [self methodSignatureForSelector: @selector(_itemsWillReplace:)]];
-    NSInvocation *doubleArgumentInvocation = [NSInvocation invocationWithMethodSignature: [self methodSignatureForSelector: @selector(_itemsDidReplace:with:)]];
+//    NSInvocation *doubleArgumentInvocation = [NSInvocation invocationWithMethodSignature: [self methodSignatureForSelector: @selector(_itemsDidReplace:with:)]];
     NSInvocation *invocation = singleArgumentInvocation;
 
 
@@ -189,7 +189,7 @@ static char DPItemsControllerObservationContext;
 
     invocation.target = self;
 
-    NSInvocation *preInvocation;
+//    NSInvocation *preInvocation;
 
     if (kind == NSKeyValueChangeReplacement && removesReplacedItems) {
         if (isPriorNotification) {
